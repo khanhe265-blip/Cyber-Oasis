@@ -103,9 +103,9 @@ export const botConfig = {
       info: "#000001",
 
       // Neutral utility colors.
-      light: "#000000",
-      dark: "#000000",
-      gray: "#000000",
+      light: "#000001",
+      dark: "#000001",
+      gray: "#000001",
 
       // Discord-style palette shortcuts.
       blurple: "#5865F2",
