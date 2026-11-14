@@ -26,18 +26,13 @@ export default {
         }
 
         const amount = interaction.options.getInteger('amount');
-        const params = new URLSearchParams({
-            addInfo: `Donate ${interaction.user.username}`,
-            accountName: name
-        });
-        if (amount) params.set('amount', String(amount));
-
-        const qrUrl = `https://img.vietqr.io/image/${bank}-${account}-compact2.png?${params}`;
+let qrUrl = `https://img.vietqr.io/image/${bank}-${account}-compact2.png?accountName=${encodeURIComponent(name)}&addInfo=${encodeURIComponent('Donate server')}`;
+if (amount) qrUrl += `&amount=${amount}`;
 
         const embed = new EmbedBuilder()
             .setColor(getColor('success'))
             .setTitle('Support the server')
-            .setDescription('Scan this QR with your banking app to donate. Thank you!')
+            .setDescription('Scan mã để server có tiền tạo gw với cả duy trì bot nhaaa!')
             .setImage(qrUrl);
 
         await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
