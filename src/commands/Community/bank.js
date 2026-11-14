@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder } from 'discord.js';
 import { getColor } from '../../config/bot.js';
 import { InteractionHelper } from '../../utils/interactionHelper.js';
 
@@ -29,12 +29,20 @@ export default {
 let qrUrl = `https://img.vietqr.io/image/${bank}-${account}-compact2.png?accountName=${encodeURIComponent(name)}&addInfo=${encodeURIComponent('Donate server')}`;
 if (amount) qrUrl += `&amount=${amount}`;
 
+        const response = await fetch(qrUrl);
+        if (!response.ok) {
+            return await InteractionHelper.safeEditReply(interaction, {
+                content: 'Could not generate the QR code right now. Please try again later.'
+            });
+        }
+        const file = new AttachmentBuilder(Buffer.from(await response.arrayBuffer()), { name: 'donate-qr.png' });
+
         const embed = new EmbedBuilder()
             .setColor(getColor('success'))
             .setTitle('Support the server')
             .setDescription('Scan mã để server có tiền tạo gw với cả duy trì bot nhaaa!')
-            .setImage(qrUrl);
+            .setImage('attachment://donate-qr.png');
 
-        await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
+        await InteractionHelper.safeEditReply(interaction, { embeds: [embed], files: [file] });
     },
 };
