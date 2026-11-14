@@ -54,15 +54,20 @@ export default {
             .setDescription('Scan mã để server có tiền tạo gw với cả duy trì bot nhaaa!')
             .setFooter({ text: 'v3' });
 
+        let file = null;
+        let note = 'v3';
+
         try {
             const response = await fetch(qrUrl);
-            if (!response.ok) throw new Error(`QR request failed: ${response.status}`);
-            const file = new AttachmentBuilder(Buffer.from(await response.arrayBuffer()), { name: 'qr.png' });
-            embed.setImage('attachment://qr.png');
-            await interaction.editReply({ embeds: [embed], files: [file] });
+            note = `v3 - QR fetch status: ${response.status}`;
+            if (response.ok) {
+                file = new AttachmentBuilder(Buffer.from(await response.arrayBuffer()), { name: 'qr.png' });
+                embed.setImage('attachment://qr.png');
+            }
         } catch (error) {
-            embed.setImage(qrUrl);
-            await interaction.editReply({ embeds: [embed] });
+            note = `v3 - QR fetch error: ${error.message}`;
         }
+
+        await interaction.editReply({ content: note, embeds: [embed], files: file ? [file] : [] });
     },
 };
